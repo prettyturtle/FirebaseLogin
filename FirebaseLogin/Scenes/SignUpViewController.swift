@@ -9,17 +9,10 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import FirebaseAuth
 
 class SignUpViewController: UIViewController {
     let disposeBag = DisposeBag()
-    let FIRAuth = Auth.auth()
-    let emailValid = BehaviorSubject<Bool>(value: false)
-    let passwordValid = BehaviorSubject<Bool>(value: false)
-    let emailPasswordInput = BehaviorSubject<(String, String)>(value: ("", ""))
-    
-    let err = PublishSubject<Error>()
-    let signUpSuccess = PublishSubject<String>()
+    let signUpViewModel = SignUpViewModel()
     
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
@@ -34,12 +27,44 @@ class SignUpViewController: UIViewController {
         setupNavigationBar()
         setupLayout()
         setupAttribute()
-        bind()
+        bind(viewModel: signUpViewModel)
     }
-}
-
-private extension SignUpViewController {
-    func bind() {
+    func bind(viewModel: SignUpViewModel) {
+        emailTextField.rx.text.orEmpty
+            .withLatestFrom(passwordTextField.rx.text.orEmpty) { (email: $0, password: $1) }
+            .bind(to: viewModel.emailPasswordInput)
+            .disposed(by: disposeBag)
+        passwordTextField.rx.text.orEmpty
+            .withLatestFrom(emailTextField.rx.text.orEmpty) { (email: $1, password: $0) }
+            .bind(to: viewModel.emailPasswordInput)
+            .disposed(by: disposeBag)
+        
+        emailTextField.rx.text.orEmpty
+            .map(viewModel.isEmailValid)
+            .bind(to: viewModel.emailValid)
+            .disposed(by: disposeBag)
+        
+        passwordTextField.rx.text.orEmpty
+            .map(viewModel.isPasswordValid)
+            .bind(to: viewModel.passwordValid)
+            .disposed(by: disposeBag)
+        
+        Observable
+            .combineLatest(
+                viewModel.emailValid,
+                viewModel.passwordValid
+            ) { $0 && $1 }
+            .bind(to: signUpButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        Observable
+            .combineLatest(
+                viewModel.emailValid,
+                viewModel.passwordValid
+            ) { $0 && $1 ? 1.0 : 0.3 }
+            .bind(to: signUpButton.rx.alpha)
+            .disposed(by: disposeBag)
+        
         signInButton.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 let signInVC = SignInViewController()
@@ -47,105 +72,34 @@ private extension SignUpViewController {
             })
             .disposed(by: disposeBag)
         
-        emailTextField.rx.text.orEmpty
-            .withLatestFrom(passwordTextField.rx.text.orEmpty) {($0, $1)}
-            .bind(to: emailPasswordInput)
-            .disposed(by: disposeBag)
-        passwordTextField.rx.text.orEmpty
-            .withLatestFrom(emailTextField.rx.text.orEmpty) {($1, $0)}
-            .bind(to: emailPasswordInput)
-            .disposed(by: disposeBag)
-
-        emailPasswordInput
-            .map { $0.0 }
-            .map(isEmailValid)
-            .bind(to: emailValid)
+        signUpButton.rx.tap
+            .bind(to: viewModel.didTapSignUpButton)
             .disposed(by: disposeBag)
         
-        emailPasswordInput
-            .map { $0.1 }
-            .map(isPasswordValid)
-            .bind(to: passwordValid)
-            .disposed(by: disposeBag)
-        
-        emailValid
+        viewModel.emailValid
             .bind(to: emailValidBullet.rx.isHidden)
             .disposed(by: disposeBag)
-        passwordValid
+        viewModel.passwordValid
             .bind(to: passwordValidBullet.rx.isHidden)
             .disposed(by: disposeBag)
         
-        Observable
-            .combineLatest(
-                emailValid,
-                passwordValid
-            ) { $0 && $1 }
-            .bind(to: signUpButton.rx.isEnabled)
-            .disposed(by: disposeBag)
-        Observable
-            .combineLatest(
-                emailValid,
-                passwordValid
-            ) { $0 && $1 ? 1.0 : 0.3 }
-            .bind(to: signUpButton.rx.alpha)
-            .disposed(by: disposeBag)
-        
-        signUpButton.rx.tap
-            .withLatestFrom(emailPasswordInput)
-            .subscribe(onNext: { [weak self] k in
-                self?.signUp(email: k.0, password: k.1)
-            })
-            .disposed(by: disposeBag)
-        
-        err
+        viewModel.err
             .map { $0.localizedDescription }
             .bind(to: errorLabel.rx.text)
             .disposed(by: disposeBag)
-        err
+        viewModel.err
             .map { _ in false }
             .bind(to: errorLabel.rx.isHidden)
             .disposed(by: disposeBag)
-        
-        signUpSuccess
-            .subscribe(onNext: {
-                let alertController = UIAlertController(title: $0, message: nil, preferredStyle: .alert)
-                let alertAction = UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    let signInVC = SignInViewController()
-                    self.show(signInVC, sender: nil)
-                })
-                alertController.addAction(alertAction)
-                self.present(alertController, animated: true, completion: nil)
+        viewModel.signUpSuccess
+            .subscribe(onNext: { [weak self] alert in
+                self?.present(alert, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
     }
-    
-    func signUp(email: String, password: String) {
-        FIRAuth.createUser(withEmail: email, password: password) { [weak self] res, error in
-            guard let self = self else { return }
-            if let error = error {
-                self.err.onNext(error)
-            } else {
-                self.signUpSuccess.onNext("회원가입 성공")
-            }
-        }
-    }
-    
-    func isEmailValid(_ email: String) -> Bool {
-        if email.contains("@") && email.contains(".") {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    func isPasswordValid(_ pw: String) -> Bool {
-        if pw.count >= 6 {
-            return true
-        } else {
-            return false
-        }
-    }
-    
+}
+
+private extension SignUpViewController {
     func setupAttribute() {
         emailTextField.emailForm()
         passwordTextField.passwordForm()

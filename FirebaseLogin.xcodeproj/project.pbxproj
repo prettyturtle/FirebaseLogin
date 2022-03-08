@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6B157C3A27D5D95200FDCCC1 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B157C3927D5D95200FDCCC1 /* UIButton+.swift */; };
 		6B157C3C27D5D95C00FDCCC1 /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B157C3B27D5D95C00FDCCC1 /* UITextField+.swift */; };
-		6B2AA0C827D51E3100699D2A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2AA0C727D51E3100699D2A /* SignUpViewController.swift */; };
 		6B2AA0CA27D5240800699D2A /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2AA0C927D5240800699D2A /* SignInViewController.swift */; };
 		6B79AB3D27D06BE40056E076 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B79AB3C27D06BE40056E076 /* AppDelegate.swift */; };
 		6B79AB3F27D06BE40056E076 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B79AB3E27D06BE40056E076 /* SceneDelegate.swift */; };
@@ -22,12 +21,13 @@
 		6B79AB6027D0EF930056E076 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 6B79AB5F27D0EF930056E076 /* RxCocoa */; };
 		6B79AB6227D0EF930056E076 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 6B79AB6127D0EF930056E076 /* RxRelay */; };
 		6B79AB6427D0EF930056E076 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6B79AB6327D0EF930056E076 /* RxSwift */; };
+		6BF5E9A727D70EDC0075E627 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5E9A627D70EDC0075E627 /* SignUpViewController.swift */; };
+		6BF5E9A927D70F2B0075E627 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF5E9A827D70F2A0075E627 /* SignUpViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6B157C3927D5D95200FDCCC1 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		6B157C3B27D5D95C00FDCCC1 /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
-		6B2AA0C727D51E3100699D2A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		6B2AA0C927D5240800699D2A /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		6B79AB3927D06BE40056E076 /* FirebaseLogin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebaseLogin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B79AB3C27D06BE40056E076 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +37,8 @@
 		6B79AB4A27D06BE60056E076 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B79AB5327D06F5F0056E076 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6BF5E9A527D6FC4F0075E627 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6BF5E9A627D70EDC0075E627 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		6BF5E9A827D70F2A0075E627 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +102,8 @@
 		6BF5E9A427D6FBEF0075E627 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				6B2AA0C727D51E3100699D2A /* SignUpViewController.swift */,
+				6BF5E9A627D70EDC0075E627 /* SignUpViewController.swift */,
+				6BF5E9A827D70F2A0075E627 /* SignUpViewModel.swift */,
 				6B2AA0C927D5240800699D2A /* SignInViewController.swift */,
 			);
 			path = Scenes;
@@ -190,7 +193,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B2AA0C827D51E3100699D2A /* SignUpViewController.swift in Sources */,
+				6BF5E9A727D70EDC0075E627 /* SignUpViewController.swift in Sources */,
+				6BF5E9A927D70F2B0075E627 /* SignUpViewModel.swift in Sources */,
 				6B157C3C27D5D95C00FDCCC1 /* UITextField+.swift in Sources */,
 				6B79AB3D27D06BE40056E076 /* AppDelegate.swift in Sources */,
 				6B2AA0CA27D5240800699D2A /* SignInViewController.swift in Sources */,
