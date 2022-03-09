@@ -73,6 +73,7 @@ class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
         
         signUpButton.rx.tap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .bind(to: viewModel.didTapSignUpButton)
             .disposed(by: disposeBag)
         
@@ -106,10 +107,7 @@ private extension SignUpViewController {
         signUpButton.signUpStyle()
         signInButton.setTitle("로그인", for: .normal)
         signInButton.setTitleColor(.secondaryLabel, for: .normal)
-        errorLabel.font = .systemFont(ofSize: 14.0, weight: .regular)
-        errorLabel.textColor = .systemRed
-        errorLabel.isHidden = true
-        errorLabel.numberOfLines = 2
+        errorLabel.errorLabelStyle()
         
         [
             emailValidBullet,
