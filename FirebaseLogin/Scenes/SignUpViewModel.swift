@@ -45,7 +45,6 @@ class SignUpViewModel {
                 if let error = error {
                     self.err.onNext(error)
                 } else {
-                    //                    self.signUpSuccess.onNext("회원가입 성공")
                     self.signUpSuccess.onNext(self.signUpSuccessAlert())
                 }
             }

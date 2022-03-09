@@ -12,11 +12,15 @@ import FirebaseAuth
 
 class SignInViewModel {
     let disposeBag = DisposeBag()
+    
     let FIRAuth = Auth.auth()
+    
     let emailPasswordInput = BehaviorSubject<(email: String, password: String)>(value: (email: "", password: ""))
     let didTapSignInButton = PublishRelay<Void>()
     let err = PublishSubject<Error>()
     let successSignIn = PublishSubject<UIAlertController>()
+    let moveToMainVC = PublishSubject<Void>()
+    
     init() {
         didTapSignInButton
             .withLatestFrom(emailPasswordInput)
@@ -25,6 +29,7 @@ class SignInViewModel {
             })
             .disposed(by: disposeBag)
     }
+    
     func signIn(email: String, password: String) {
         FIRAuth
             .signIn(withEmail: email, password: password) { [weak self] res, error in
@@ -38,7 +43,13 @@ class SignInViewModel {
     }
     func successSignInAlert() -> UIAlertController {
         let alertController = UIAlertController(title: "로그인 성공", message: nil, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let alertAction = UIAlertAction(
+            title: "OK",
+            style: .default,
+            handler: { [weak self] _ in
+                self?.moveToMainVC.onNext(())
+            }
+        )
         alertController.addAction(alertAction)
         return alertController
     }

@@ -18,6 +18,7 @@ class SignInViewController: UIViewController {
     private let passwordTextField = UITextField()
     private let errorLabel = UILabel()
     private let signInButton = UIButton()
+    private let rightBarButton = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +43,14 @@ class SignInViewController: UIViewController {
             .bind(to: viewModel.didTapSignInButton)
             .disposed(by: disposeBag)
         
+        rightBarButton.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                let mainVC = MainViewController()
+                self?.show(mainVC, sender: nil)
+            })
+            .disposed(by: disposeBag)
+            
+        
         viewModel.err
             .map { $0.localizedDescription }
             .bind(to: errorLabel.rx.text)
@@ -51,8 +60,14 @@ class SignInViewController: UIViewController {
             .bind(to: errorLabel.rx.isHidden)
             .disposed(by: disposeBag)
         viewModel.successSignIn
-            .subscribe(onNext: {
-                self.present($0, animated: true, completion: nil)
+            .subscribe(onNext: { [weak self] alert in
+                self?.present(alert, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+        viewModel.moveToMainVC
+            .subscribe(onNext: { [weak self] _ in
+                let mainVC = MainViewController()
+                self?.show(mainVC, sender: nil)
             })
             .disposed(by: disposeBag)
     }
@@ -63,8 +78,9 @@ private extension SignInViewController {
         view.backgroundColor = .systemBackground
         emailTextField.emailForm()
         passwordTextField.passwordForm()
-        signInButton.signInStyle()
+        signInButton.defaultStyle("로그인")
         errorLabel.errorLabelStyle()
+        rightBarButton.image = UIImage(systemName: "house")
     }
     func setupLayout() {
         [
@@ -93,5 +109,6 @@ private extension SignInViewController {
     }
     func setupNavigationBar() {
         title = "로그인"
+        navigationItem.rightBarButtonItem = rightBarButton
     }
 }

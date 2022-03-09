@@ -104,7 +104,7 @@ private extension SignUpViewController {
     func setupAttribute() {
         emailTextField.emailForm()
         passwordTextField.passwordForm()
-        signUpButton.signUpStyle()
+        signUpButton.defaultStyle("회원가입")
         signInButton.setTitle("로그인", for: .normal)
         signInButton.setTitleColor(.secondaryLabel, for: .normal)
         errorLabel.errorLabelStyle()
