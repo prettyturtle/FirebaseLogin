@@ -29,6 +29,9 @@ class MainViewController: UIViewController {
         logoutButton.rx.tap
             .bind(to: viewModel.didTapLogoutButton)
             .disposed(by: disposeBag)
+        emailVerifyButton.rx.tap
+            .bind(to: viewModel.didTapEmailVerifyButton)
+            .disposed(by: disposeBag)
         
         viewModel.currentUser
             .bind(to: userNameLabel.rx.text)
@@ -48,6 +51,11 @@ class MainViewController: UIViewController {
         viewModel.pop
             .subscribe(onNext: { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        viewModel.showAlert
+            .subscribe(onNext: { [weak self] alert in
+                self?.present(alert, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
     }
