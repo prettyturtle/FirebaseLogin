@@ -16,6 +16,7 @@ class SignUpViewController: UIViewController {
     
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
+    private let nameTextField = UITextField()
     private let signUpButton = UIButton()
     private let signInButton = UIButton()
     private let errorLabel = UILabel()
@@ -102,8 +103,9 @@ class SignUpViewController: UIViewController {
 
 private extension SignUpViewController {
     func setupAttribute() {
-        emailTextField.emailForm()
-        passwordTextField.passwordForm()
+        emailTextField.defaultForm("이메일을 입력하세요.", style: .email)
+        passwordTextField.defaultForm("비밀번호를 입력하세요.(6자 이상)", style: .password)
+        nameTextField.defaultForm("이름을 입력하세요.", style: .name)
         signUpButton.defaultStyle("회원가입")
         signInButton.setTitle("로그인", for: .normal)
         signInButton.setTitleColor(.secondaryLabel, for: .normal)
@@ -122,6 +124,7 @@ private extension SignUpViewController {
         [
             emailTextField,
             passwordTextField,
+            nameTextField,
             errorLabel,
             emailValidBullet,
             passwordValidBullet,
@@ -141,8 +144,12 @@ private extension SignUpViewController {
             $0.top.equalTo(passwordTextField.snp.bottom).offset(4.0)
             $0.leading.trailing.equalToSuperview().inset(16.0)
         }
+        nameTextField.snp.makeConstraints {
+            $0.top.equalTo(errorLabel.snp.bottom).offset(8.0)
+            $0.leading.trailing.equalToSuperview().inset(16.0)
+        }
         signUpButton.snp.makeConstraints {
-            $0.top.equalTo(errorLabel.snp.bottom).offset(16.0)
+            $0.top.equalTo(nameTextField.snp.bottom).offset(16.0)
             $0.leading.trailing.equalToSuperview().inset(16.0)
         }
         signInButton.snp.makeConstraints {

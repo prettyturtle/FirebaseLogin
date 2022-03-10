@@ -76,8 +76,8 @@ class SignInViewController: UIViewController {
 private extension SignInViewController {
     func setupAttribute() {
         view.backgroundColor = .systemBackground
-        emailTextField.emailForm()
-        passwordTextField.passwordForm()
+        emailTextField.defaultForm("이메일을 입력하세요.", style: .email)
+        passwordTextField.defaultForm("비밀번호를 입력하세요.(6자 이상)", style: .password)
         signInButton.defaultStyle("로그인")
         errorLabel.errorLabelStyle()
         rightBarButton.image = UIImage(systemName: "house")
