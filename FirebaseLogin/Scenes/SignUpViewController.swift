@@ -32,15 +32,6 @@ class SignUpViewController: UIViewController {
     }
     func bind(viewModel: SignUpViewModel) {
         emailTextField.rx.text.orEmpty
-            .withLatestFrom(passwordTextField.rx.text.orEmpty) { (email: $0, password: $1) }
-            .bind(to: viewModel.emailPasswordInput)
-            .disposed(by: disposeBag)
-        passwordTextField.rx.text.orEmpty
-            .withLatestFrom(emailTextField.rx.text.orEmpty) { (email: $1, password: $0) }
-            .bind(to: viewModel.emailPasswordInput)
-            .disposed(by: disposeBag)
-        
-        emailTextField.rx.text.orEmpty
             .map(viewModel.isEmailValid)
             .bind(to: viewModel.emailValid)
             .disposed(by: disposeBag)
@@ -48,6 +39,15 @@ class SignUpViewController: UIViewController {
         passwordTextField.rx.text.orEmpty
             .map(viewModel.isPasswordValid)
             .bind(to: viewModel.passwordValid)
+            .disposed(by: disposeBag)
+        
+        Observable
+            .combineLatest(
+                emailTextField.rx.text.orEmpty,
+                passwordTextField.rx.text.orEmpty,
+                nameTextField.rx.text.orEmpty
+            ) { (email: $0, password: $1, name: $2) }
+            .bind(to: viewModel.textInput)
             .disposed(by: disposeBag)
         
         Observable

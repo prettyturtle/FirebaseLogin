@@ -23,7 +23,9 @@ extension UITextField {
         switch style {
         case .password:
             self.isSecureTextEntry = true
-        case .email, .name:
+        case .email:
+            self.keyboardType = .emailAddress
+        case .name:
             break
         }
     }

@@ -17,7 +17,7 @@ class SignUpViewModel {
     
     let emailValid = BehaviorSubject<Bool>(value: false)
     let passwordValid = BehaviorSubject<Bool>(value: false)
-    let emailPasswordInput = BehaviorSubject<(email: String, password: String)>(value: (email: "", password: ""))
+    let textInput = BehaviorSubject<(email: String, password: String, name: String)>(value: (email: "", password: "", name: ""))
     let didTapSignUpButton = PublishRelay<Void>()
     let err = PublishSubject<Error>()
     let signUpSuccess = PublishSubject<UIAlertController>()
@@ -29,7 +29,6 @@ class SignUpViewModel {
             return false
         }
     }
-    
     func isPasswordValid(_ pw: String) -> Bool {
         if pw.count >= 6 {
             return true
@@ -37,14 +36,21 @@ class SignUpViewModel {
             return false
         }
     }
-    
-    func signUp(email: String, password: String) {
+    func signUp(email: String, password: String, name: String) {
         FIRAuth
             .createUser(withEmail: email, password: password) { [weak self] res, error in
                 guard let self = self else { return }
                 if let error = error {
                     self.err.onNext(error)
                 } else {
+                    let userInfo = self.FIRAuth.currentUser?.createProfileChangeRequest()
+                    userInfo?.displayName = name
+                    userInfo?.commitChanges(completion: { error in
+                        if let error = error {
+                            self.err.onNext(error)
+                            return
+                        }
+                    })
                     self.signUpSuccess.onNext(self.signUpSuccessAlert())
                 }
             }
@@ -58,9 +64,9 @@ class SignUpViewModel {
     
     init() {
         didTapSignUpButton
-            .withLatestFrom(emailPasswordInput)
+            .withLatestFrom(textInput)
             .subscribe(onNext: { [weak self] form in
-                self?.signUp(email: form.email, password: form.password)
+                self?.signUp(email: form.email, password: form.password, name: form.name)
             })
             .disposed(by: disposeBag)
     }

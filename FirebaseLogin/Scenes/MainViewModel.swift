@@ -39,7 +39,7 @@ class MainViewModel {
             .disposed(by: disposeBag)
     }
     func getCurrentUser() {
-        let user = FIRAuth.currentUser?.email ?? "로그인 정보 없음"
+        let user = FIRAuth.currentUser?.displayName ?? "로그인 정보 없음"
         currentUser.onNext(user)
     }
     func isEmailVerified() {
